@@ -1,0 +1,29 @@
+{
+  "name": "pages",
+  "version": "0.0.1",
+  "description": "movies",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "jade": "^1.11.0",
+    "express": "^4.13.4",
+    "moment": "^2.12.0",
+    "mongoose": "^4.4.9",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-concurrent": "^2.2.1",
+    "grunt-contrib-nodemon": "^0.5.2",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-nodemon": "^0.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "movies"
+  ],
+  "author": "Eddie",
+  "license": "ISC"
+}
