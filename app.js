@@ -2,7 +2,10 @@ var express = require("express");
 var path = require("path");
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var Movie = require('./models/movie')
+var Movie = require('./models/movie');
+var User = require('./models/user');
+var cookieParser = require('cookie-parser')
+var session = require('express-session')
 var port = process.env.PORT || 3000;
 var app = express();
 
@@ -10,8 +13,13 @@ mongoose.connect('mongodb://127.0.0.1/movies')
 
 app.set("views", "./views/pages");
 app.set("view engine", "jade");
-app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(cookieParser());
+app.use(session({
+	secret: 'Echo',
+  resave:false,
+	saveUninitialized:true}));
 app.use(express.static(path.join(__dirname, 'public')))
 app.locals.moment = require('moment')
 app.listen(port);
@@ -20,6 +28,8 @@ console.log("Page started on port " + port);
 
 //index page
 app.get('/', function(req, res){
+	console.log('user in session:');
+	console.log(req.session.user);
 	Movie.fetch(function(err, movies) {
 		if(err){
 			console.log(err);
@@ -150,4 +160,70 @@ app.delete('/admin/list', function(req, res){
 		})
 	}
 })
+
+
+//user signup
+app.post('/user/signup',function(req, res){
+	var _user = req.body.user;
+	User.findOne({name: _user.name}, function(err, user){
+		if(err) console.log(err);
+
+		if(user) return res.redirect('/');
+		else {
+			var user = new User(_user);
+			user.save(function(err, user){
+				if(err) console.log(err);
+				//console.log(user);
+				res.redirect('/admin/userlist');
+			})
+		}
+	})
+	
+})
+
+//userlist page
+app.get('/admin/userlist', function(req, res){
+	User.fetch(function(err, users) {
+		if(err){
+			console.log(err);
+		}
+
+		res.render('userlist', {
+		title : '用户列表页',
+		users : users
+		});
+	})
+	
+});
+
+//user signin 
+app.post('/user/signin', function(req, res){
+	var _user = req.body.user;
+	var name = _user.name;
+	var password = _user.password;
+
+	User.findOne({name: name}, function(err, user){
+		if(err) {
+			console.log(err);
+		}
+		if(!user){
+			return res.redirect('/');
+		}
+		user.comparePassword(password, function(err, isMatch){
+			if(err){
+				console.log(err);
+			}
+			if(isMatch){
+				console.log('Password is matched');
+				req.session.user = user;
+				return res.redirect('/');
+			}else{
+				console.log('Password is not matched');
+			}
+		})
+	})
+})
+
+
+
 
