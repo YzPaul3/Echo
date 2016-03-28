@@ -6,6 +6,8 @@
   "dependencies": {
     "bcrypt": "^0.8.5",
     "body-parser": "^1.15.0",
+    "connect": "^3.4.1",
+    "connect-mongo": "^1.1.0",
     "cookie-parser": "^1.4.1",
     "cookie-session": "^2.0.0-alpha.1",
     "express": "^4.13.4",
@@ -13,6 +15,8 @@
     "jade": "^1.11.0",
     "moment": "^2.12.0",
     "mongoose": "^4.4.9",
+    "morgan": "^1.7.0",
+    "session": "^0.1.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
